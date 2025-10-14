@@ -1,9 +1,9 @@
-import express from "express";
+import express from "express"
 
-const web = express.Router();
+const router = express.Router();
 
-web.get("/", (req, res) => {
-    res.render("index");
+router.get('/', (req, res) => {
+    res.render('index', { title: 'Selamat Datang di Kamus' });
 });
 
-export default web;
+export default router;
