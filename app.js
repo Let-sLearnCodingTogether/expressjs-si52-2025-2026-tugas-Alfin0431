@@ -1,20 +1,24 @@
+import express from "express"
+import web from "./routes/web.js"
+import api from "./routes/api.js"
+import { database } from "./config/database.js"
 
-const express = require('express');
+const app = express()
 
-const authRoute = require('./route/authRoute');
-const termRoute = require('./route/termRoute');
+app.use(express.json())
 
-const app = express();
+app.use(express.static('public'))
 
+app.set('view engine', 'ejs')
 
-app.use(express.json()); 
+app.use(web)
+app.use("/api", api)
 
-app.use('/api/auth', authRoute); 
-app.use('/api/terms', termRoute); 
+app.get('/', (res, req) =>{
+    
+})
 
-
-app.use((req, res, next) => {
-    res.status(404).json({ message: 'Endpoint tidak ditemukan' });
-});
-
-module.exports = app;
+app.listen("3000", () => {
+    database()
+    console.log('App berjalan di : http://localhost:3000');
+})
