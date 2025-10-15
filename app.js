@@ -14,12 +14,10 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/", webRoutes)
 app.use("/api/auth", authRoutes)
-
-app.use("/api/auth", authRoutes)
 app.use("/api/kamus", kamusRoutes)
 
 
-app.listen("3000", () => {
+app.listen(process.env.PORT || 3000, () => {
     database()  
     console.log('App berjalan di : http://localhost:3000');
 })

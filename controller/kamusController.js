@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export const createKamus = async (req, res) => {
     try {
-        const { term, definition, source } = req.body; 
+        const { term, definition, Source } = req.body; 
         
         if (!term || !definition) {
             return res.status(400).json({ message: "Istilah & Definisi Wajib Diisi" });
@@ -17,7 +17,7 @@ export const createKamus = async (req, res) => {
         const newKamus = await Kamus.create({
             term,
             definition,
-            source,
+            Source,
             user: req.user.id 
         });
 
@@ -64,7 +64,6 @@ export const updateKamus = async (req, res) => {
         }
 
         const kamusItem = await Kamus.findById(id); 
-
         if (!kamusItem) { 
             return res.status(404).json({ message: "Istilah tidak ditemukan" });
         }
@@ -72,11 +71,15 @@ export const updateKamus = async (req, res) => {
             return res.status(403).json({ message: "Akses ditolak" });  
         }
 
-        kamusItem.term = req.body.term || kamusItem.term;
-        kamusItem.definition = req.body.definition || kamusItem.definition;
-        kamusItem.source = req.body.source || kamusItem.source; 
-
-        const updatedKamus = await kamusItem.save();
+        const updatedKamus = await Kamus.findOneAndUpdate({
+            _id: id, user: req.user.id },
+            {
+                term: req.body.term,
+                definition: req.body.definition,
+                Source: req.body.Source
+            },
+            { new: true, runValidators: true }
+        );
 
         res.status(200).json({
             message: "Istilah berhasil diperbarui",
